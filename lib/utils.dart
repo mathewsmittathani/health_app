@@ -1,4 +1,5 @@
 import 'package:health/health.dart';
+import 'package:intl/intl.dart';
 import 'models/aggregated_health_data_model.dart';
 
 List<AggregatedHealthData> aggregateHealthData(
@@ -33,4 +34,15 @@ List<AggregatedHealthData> aggregateHealthData(
       unit: unit,
     );
   }).toList();
+}
+
+parseDate(String date) {
+  return DateFormat('yyyy-M-d').parse(date);
+}
+
+bool isSameDateAsToday(DateTime date) {
+  DateTime today = DateTime.now();
+  return date.year == today.year &&
+      date.month == today.month &&
+      date.day == today.day;
 }

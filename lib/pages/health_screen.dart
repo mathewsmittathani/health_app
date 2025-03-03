@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:health_app/provider/health_provider.dart';
+import 'package:health_app/pages/step_analysis_screen.dart';
 import 'package:health_app/widgets/filter_button.dart';
 import 'package:health_app/widgets/health_data_card.dart';
 import 'package:health_app/widgets/empty_state_text.dart';
@@ -52,59 +53,70 @@ class HealthDataScreenState extends State<HealthDataScreen> {
               ),
             );
           } else {
-            return Column(
-              children: [
-                //date filters
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: List.generate(8, (index) {
-                      DateTime date =
-                          DateTime.now().subtract(Duration(days: index));
-                      return index == 0
-                          ? 'Today'
-                          : index == 1
-                              ? 'Yesterday'
-                              : DateFormat('dd MMM').format(date);
-                    }).asMap().entries.map((e) {
-                      int index = e.key;
-                      String buttonName = e.value;
-                      return FilterButton(
-                        buttonName: buttonName,
-                        onTap: () => healthProvider.selectFilter(index),
-                        isSelected: healthProvider.selectedFilterIndex == index,
-                      );
-                    }).toList(),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  //date filters
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: List.generate(8, (i) {
+                        DateTime date =
+                            DateTime.now().subtract(Duration(days: i));
+                        return i == 0
+                            ? 'Today'
+                            : i == 1
+                                ? 'Yesterday'
+                                : DateFormat('dd MMM').format(date);
+                      }).asMap().entries.map((e) {
+                        int index = e.key;
+                        String buttonName = e.value;
+                        return FilterButton(
+                          buttonName: buttonName,
+                          onTap: () => healthProvider.selectFilter(index),
+                          isSelected:
+                              healthProvider.selectedFilterIndex == index,
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-                healthProvider.isLoading
-                    ? Expanded(
-                        child: Center(
+
+                  SizedBox(height: 40),
+                  healthProvider.isLoading
+                      ? Center(
                           child: CircularProgressIndicator(
                             color: Colors.tealAccent,
                             strokeWidth: 5,
                           ),
-                        ),
-                      )
-                    : Expanded(
-                        child: healthProvider.healthData.isEmpty
-                            ? const Center(child: EmptyStateText())
-                            : ListView.builder(
-                                padding: EdgeInsets.symmetric(horizontal: 24),
-                                itemCount: healthProvider.healthData.length,
-                                itemBuilder: (context, index) {
-                                  final data = healthProvider.healthData[index];
-                                  return HealthDataCard(
-                                    type: data.type,
-                                    value: data.value,
-                                    unit: data.unit,
-                                  );
-                                },
-                              ),
-                      ),
-              ],
+                        )
+                      : healthProvider.healthData.isEmpty
+                          ? const Center(child: EmptyStateText())
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.symmetric(horizontal: 24),
+                              itemCount: healthProvider.healthData.length,
+                              itemBuilder: (context, index) {
+                                final data = healthProvider.healthData[index];
+                                return HealthDataCard(
+                                  type: data.type,
+                                  value: data.value,
+                                  unit: data.unit,
+                                );
+                              },
+                            ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StepAnalysisScreen()));
+                    },
+                    child: Text('Steps Analysis'),
+                  ),
+                ],
+              ),
             );
           }
         },

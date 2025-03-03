@@ -16,12 +16,15 @@ dependencies:
   provider: ^6.0.5
   health: ^12.0.1
   intl: ^0.20.2
+  arc_progress_bar_new: ^1.0.4
+  fl_chart: ^0.70.2
+  hive_ce: ^2.10.1
+  hive_ce_flutter: ^2.2.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
   flutter_lints: ^5.0.0
 
